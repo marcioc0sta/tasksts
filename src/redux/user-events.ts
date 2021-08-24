@@ -21,7 +21,7 @@ export const userEventsSlice = createSlice({
   name: 'userEvents',
   initialState,
   reducers: {
-    initial: state => state,
+    initial: () => initialState,
   },
 })
 

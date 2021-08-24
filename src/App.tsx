@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 
-function App() {
-  return <div className='App'></div>
+import Recorder from 'components/Recorder'
+
+function App(): ReactElement {
+  return (
+    <div className='App'>
+      <Recorder />
+    </div>
+  )
 }
 
 export default App
