@@ -46,7 +46,7 @@ const Recorder = (): ReactElement => {
   return (
     <div className={cx('recorder', { 'recorder-started': started })}>
       <button onClick={handleClick} className='recorder-record'>
-        <span></span>
+        <span />
       </button>
       <div className='recorder-counter'>
         {addZero(hrs)}:{addZero(min)}:{addZero(sec)}
