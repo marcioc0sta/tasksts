@@ -1,7 +1,14 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import './calendar.css'
+import { useDispatch } from 'react-redux'
+
+import { fetchUserEvents } from '../../redux/user-events'
 
 const Calendar = (): ReactElement => {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(fetchUserEvents())
+  }, [])
   return (
     <div className='calendar'>
       <div className='calendar-day'>
