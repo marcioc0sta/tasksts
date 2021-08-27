@@ -3,10 +3,9 @@ import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import './recorder.css'
+import { addZero } from 'lib/utils'
 import { START, STOP } from 'redux/recorder'
 import { RootState } from 'redux/store'
-
-const addZero = (num: number): string => (num < 10 ? `0${num}` : `${num}`)
 
 const Recorder = (): ReactElement => {
   const dispatch = useDispatch()

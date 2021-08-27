@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-interface UserEvent {
+export interface UserEvent {
   id: number
   title: string
   dateStart: string
