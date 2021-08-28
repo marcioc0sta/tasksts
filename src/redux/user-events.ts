@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
+import { RootState } from './store'
+
 export interface UserEvent {
   id: number
   title: string
@@ -28,7 +30,35 @@ export const fetchUserEvents = createAsyncThunk<
     const response = await fetch('http://localhost:3001/events')
     return await response.json()
   } catch (e) {
-    return rejectWithValue('failed')
+    console.log(e)
+    return rejectWithValue('fetchUserEvents-failed')
+  }
+})
+
+export const postUserEvent = createAsyncThunk<
+  UserEvent,
+  void,
+  { state: RootState; rejectValue: string | undefined }
+>('postUserEvent', async (_, { getState, rejectWithValue }) => {
+  try {
+    const dateStart = new Date(getState().recorder.dateStart).toISOString()
+    const event: Omit<UserEvent, 'id'> = {
+      title: 'No name',
+      dateStart,
+      dateEnd: new Date().toISOString(),
+    }
+    const response = await fetch('http://localhost:3001/events', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(event),
+    })
+    const createdEvent: UserEvent = await response.json()
+    return createdEvent
+  } catch (e) {
+    console.log(e)
+    return rejectWithValue('postUserEvent-failed')
   }
 })
 
@@ -48,6 +78,14 @@ export const userEventsSlice = createSlice({
       }, {})
     })
     builder.addCase(fetchUserEvents.rejected, (state, action) => {
+      state.status = action.payload
+    })
+    builder.addCase(postUserEvent.fulfilled, (state, action) => {
+      const event = action.payload
+      state.allIds = [...state.allIds, event.id]
+      state.byIds = { ...state.byIds, [event.id]: event }
+    })
+    builder.addCase(postUserEvent.rejected, (state, action) => {
       state.status = action.payload
     })
   },

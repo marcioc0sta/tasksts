@@ -7,6 +7,8 @@ import { addZero } from 'lib/utils'
 import { START, STOP } from 'redux/recorder'
 import { RootState } from 'redux/store'
 
+import { postUserEvent } from '../../redux/user-events'
+
 const Recorder = (): ReactElement => {
   const dispatch = useDispatch()
   const { dateStart } = useSelector((state: RootState) => state.recorder)
@@ -17,6 +19,7 @@ const Recorder = (): ReactElement => {
   const handleClick = (): void => {
     if (started) {
       window.clearInterval(interval.current)
+      dispatch(postUserEvent())
       dispatch(STOP())
       return
     }
