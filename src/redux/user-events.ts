@@ -62,6 +62,22 @@ export const postUserEvent = createAsyncThunk<
   }
 })
 
+export const deleteUserEvent = createAsyncThunk<
+  number,
+  number,
+  { rejectValue: string | undefined }
+>('deleteUserEvent', async (deletedId, { rejectWithValue }) => {
+  try {
+    await fetch(`http://localhost:3001/events/${deletedId}`, {
+      method: 'DELETE',
+    })
+    return deletedId
+  } catch (e) {
+    console.log(e)
+    return rejectWithValue('deleteUserEvent-failed')
+  }
+})
+
 export const userEventsSlice = createSlice({
   name: 'userEvents',
   initialState,
@@ -86,6 +102,16 @@ export const userEventsSlice = createSlice({
       state.byIds = { ...state.byIds, [event.id]: event }
     })
     builder.addCase(postUserEvent.rejected, (state, action) => {
+      state.status = action.payload
+    })
+    builder.addCase(deleteUserEvent.fulfilled, (state, action) => {
+      const dId = action.payload
+      const byIds = state.byIds
+      const { [dId]: number, ...rest } = byIds
+      state.byIds = rest
+      state.allIds = state.allIds.filter(storedId => storedId !== dId)
+    })
+    builder.addCase(deleteUserEvent.rejected, (state, action) => {
       state.status = action.payload
     })
   },
