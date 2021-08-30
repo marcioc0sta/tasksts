@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { addZero } from 'lib/utils'
 import { RootState } from 'redux/store'
-import { deleteUserEvent, fetchUserEvents, UserEvent } from 'redux/user-events'
+import { fetchUserEvents, UserEvent } from 'redux/user-events'
+
+import CalendarEvent from '../CalendarEvent'
 
 const createDateKey = (date: Date): string => {
   const day = date.getUTCDate()
@@ -73,24 +75,9 @@ const Calendar = (): ReactElement => {
               </span>
             </div>
             <div className='calendar-events'>
-              {groups.map(event => {
-                return (
-                  <div key={event.id} className='calendar-event'>
-                    <div className='calendar-event-info'>
-                      <div className='calendar-event-time'>10:00 - 12:00</div>
-                      <div className='calendar-event-title'>{event.title}</div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        dispatch(deleteUserEvent(event.id))
-                      }}
-                      className='calendar-event-delete-button'
-                    >
-                      &times;
-                    </button>
-                  </div>
-                )
-              })}
+              {groups.map(event => (
+                <CalendarEvent key={event.id} event={event} />
+              ))}
             </div>
           </div>
         )
