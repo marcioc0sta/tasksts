@@ -78,6 +78,27 @@ export const deleteUserEvent = createAsyncThunk<
   }
 })
 
+export const updateUserEvent = createAsyncThunk<
+  UserEvent,
+  UserEvent,
+  { rejectValue: string | undefined }
+>('updateUserEvent', async (event, { rejectWithValue }) => {
+  try {
+    const response = await fetch(`http://localhost:3001/events/${event.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(event),
+    })
+    const updatedEvent: UserEvent = await response.json()
+    return updatedEvent
+  } catch (e) {
+    console.log(e)
+    return rejectWithValue('deleteUserEvent-failed')
+  }
+})
+
 export const userEventsSlice = createSlice({
   name: 'userEvents',
   initialState,
@@ -113,6 +134,10 @@ export const userEventsSlice = createSlice({
     })
     builder.addCase(deleteUserEvent.rejected, (state, action) => {
       state.status = action.payload
+    })
+    builder.addCase(updateUserEvent.fulfilled, (state, action) => {
+      const updatedEvent = action.payload
+      state.byIds = { ...state.byIds, [updatedEvent.id]: updatedEvent }
     })
   },
 })
